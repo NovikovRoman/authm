@@ -94,19 +94,9 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
             $content = $this->httpClient->request(Parameters::METHOD_POST, self::API_BASE_PATH . $path, $options)
                 ->getBody()->getContents();
             $resp = json_decode($content, true);
-            if (!empty($resp['error'])) {
-                throw (new APIException($resp['message']))
-                    ->setStatus($resp['status'])
-                    ->setStatusMessage($resp['error']);
-            }
 
         } catch (RequestException $e) {
-            $resp = json_decode($e->getResponse()->getBody()->getContents(), true);
-            if (!$resp) {
-                throw (new APIException($e->getMessage()))
-                    ->setStatus($e->getResponse()->getStatusCode())
-                    ->setStatusMessage($e->getResponse()->getReasonPhrase());
-            }
+            throw $this->requestError($e);
         }
 
         return $resp;
@@ -117,5 +107,19 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
         return [
             'Client-ID' => $this->getClientID(),
         ];
+    }
+
+    private function requestError(RequestException $e)
+    {
+        $resp = json_decode($e->getResponse()->getBody()->getContents(), true);
+        if (!$resp) {
+            return (new APIException($e->getMessage()))
+                ->setStatus($e->getResponse()->getStatusCode())
+                ->setStatusMessage($e->getResponse()->getReasonPhrase());
+        }
+
+        return (new APIException($resp['message']))
+            ->setStatus($resp['status'])
+            ->setStatusMessage($resp['error']);
     }
 }
