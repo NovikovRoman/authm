@@ -7,7 +7,6 @@ use AuthManager\OAuthProviderInterface;
 use AuthManager\OAuthProviders\AbstractProvider;
 use AuthManager\Parameters;
 use AuthManager\ProviderWithAPIInterface;
-use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 
@@ -52,7 +51,7 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
             throw $this->requestError($e);
         }
 
-        throw $this->unknownError(new Exception('The body does not contain an array (' . $content . ')'));
+        throw $this->unknownError(new APIException('The body does not contain an array (' . $content . ')'));
     }
 
     /**
@@ -76,13 +75,16 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
             $content = $this->httpClient
                 ->request(Parameters::METHOD_POST, $path, $options)
                 ->getBody()->getContents();
-            $resp = json_decode($content, true);
+
+            if ($resp = json_decode($content, true)) {
+                return $resp;
+            }
 
         } catch (RequestException $e) {
             throw $this->requestError($e);
         }
 
-        return $resp;
+        throw $this->unknownError(new APIException('The body does not contain an array (' . $content . ')'));
     }
 
     /**

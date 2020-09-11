@@ -53,24 +53,16 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
                 'connect_timeout' => Parameters::CONNECT_TIMEOUT,
                 'headers' => $headers,
             ])->getBody()->getContents();
-            $resp = json_decode($content, true);
 
-            if (!empty($resp['error'])) {
-                throw (new APIException($resp['message']))
-                    ->setStatus($resp['status'])
-                    ->setStatusMessage($resp['error']);
+            if ($resp = json_decode($content, true)) {
+                return $resp;
             }
 
         } catch (RequestException $e) {
-            $resp = json_decode($e->getResponse()->getBody()->getContents(), true);
-            if (!$resp) {
-                throw (new APIException($e->getMessage()))
-                    ->setStatus($e->getResponse()->getStatusCode())
-                    ->setStatusMessage($e->getResponse()->getReasonPhrase());
-            }
+            throw $this->requestError($e);
         }
 
-        return $resp;
+        throw $this->unknownError(new APIException('The body does not contain an array (' . $content . ')'));
     }
 
     /**
@@ -93,13 +85,16 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
         try {
             $content = $this->httpClient->request(Parameters::METHOD_POST, self::API_BASE_PATH . $path, $options)
                 ->getBody()->getContents();
-            $resp = json_decode($content, true);
+
+            if ($resp = json_decode($content, true)) {
+                return $resp;
+            }
 
         } catch (RequestException $e) {
             throw $this->requestError($e);
         }
 
-        return $resp;
+        throw $this->unknownError(new APIException('The body does not contain an array (' . $content . ')'));
     }
 
     private function getClientHeaders(): array

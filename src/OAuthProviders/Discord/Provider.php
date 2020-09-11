@@ -42,13 +42,16 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
                 'connect_timeout' => Parameters::CONNECT_TIMEOUT,
                 'headers' => array_merge($headers, $this->getAuthHeaders()),
             ])->getBody()->getContents();
-            $resp = json_decode($content, true);
+
+            if ($resp = json_decode($content, true)) {
+                return $resp;
+            }
 
         } catch (RequestException $e) {
             throw $this->requestError($e);
         }
 
-        return $resp;
+        throw $this->unknownError(new APIException('The body does not contain an array (' . $content . ')'));
     }
 
     /**
@@ -71,13 +74,16 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
             $content = $this->httpClient
                 ->request(Parameters::METHOD_POST, self::API_BASE_PATH . $path, $options)
                 ->getBody()->getContents();
-            $resp = json_decode($content, true);
+
+            if ($resp = json_decode($content, true)) {
+                return $resp;
+            }
 
         } catch (RequestException $e) {
             throw $this->requestError($e);
         }
 
-        return $resp;
+        throw $this->unknownError(new APIException('The body does not contain an array (' . $content . ')'));
     }
 
     /**
