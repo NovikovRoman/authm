@@ -50,7 +50,7 @@ class OpenIDManager implements OpenIDManagerInterface
      */
     public function getID(string $url): string
     {
-        parse_str(parse_url($url, PHP_URL_QUERY), $requestParameters);
+        $requestParameters = $this->explodeUrl($url);
         $params = [
             'openid.assoc_handle' => $requestParameters['openid_assoc_handle'],
             'openid.signed' => $requestParameters['openid_signed'],
@@ -92,6 +92,21 @@ class OpenIDManager implements OpenIDManagerInterface
     public function getInvalidateHandle(): string
     {
         return $this->invalidateHandle;
+    }
+
+    private function explodeUrl(string $url)
+    {
+        parse_str(parse_url($url, PHP_URL_QUERY), $requestParameters);
+
+        $requiredKeys = ['openid_assoc_handle', 'openid_signed', 'openid_sig', 'openid_ns', 'openid_op_endpoint',
+            'openid_claimed_id', 'openid_identity', 'openid_response_nonce'];
+        foreach ($requiredKeys as $name) {
+            if (empty($requestParameters[$name])) {
+                $requestParameters[$name] = '';
+            }
+        }
+
+        return $requestParameters;
     }
 
     private function getIdFromIdentity($identity)
