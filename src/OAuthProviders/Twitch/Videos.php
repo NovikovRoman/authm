@@ -22,11 +22,11 @@ class Videos
      */
     public function getID(array $ids = [])
     {
-        $query = '';
+        $path = '/videos';
         if (!empty($ids)) {
-            $query = 'id=' . implode('&id=', $ids);
+            $path .= 'id=' . implode('&id=', $ids);
         }
-        return $this->provider->requestGet('/videos', $query); // Client
+        return $this->provider->requestGet($path); // Client
     }
 
     /**
@@ -38,11 +38,8 @@ class Videos
      */
     public function getUserID($id, $filter = [])
     {
-        $query = 'user_id=' . $id;
-        if (!empty($filter)) {
-            $query .= '&' . http_build_query($filter);
-        }
-        return $this->provider->requestGet('/videos', $query); // Client
+        $path = '/videos?user_id=' . $id;
+        return $this->provider->requestGet($path, $filter); // Client
     }
 
     /**
@@ -54,10 +51,7 @@ class Videos
      */
     public function getGameID($id, $filter = [])
     {
-        $query = 'game_id=' . $id;
-        if (!empty($filter)) {
-            $query .= '&' . http_build_query($filter);
-        }
-        return $this->provider->requestGet('/videos', $query); // Client
+        $path = '/videos?game_id=' . $id;
+        return $this->provider->requestGet($path, $filter); // Client
     }
 }

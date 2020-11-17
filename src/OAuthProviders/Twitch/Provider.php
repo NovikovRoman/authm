@@ -28,7 +28,7 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
 
     /**
      * @param $path
-     * @param array|string $query
+     * @param array $query
      * @param array $headers
      * @return array
      * @throws APIException
