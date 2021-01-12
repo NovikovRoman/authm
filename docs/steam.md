@@ -31,6 +31,8 @@ if (!empty($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
     }
 
 } else {
-    $am->signin();
+    $am->signin(true);
+    // optional
+    // print_r($am->signin());
 }
 ```
