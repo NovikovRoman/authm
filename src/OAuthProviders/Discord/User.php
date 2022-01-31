@@ -19,7 +19,7 @@ class User
      * @throws APIException
      * @throws GuzzleException
      */
-    public function me()
+    public function me(): array
     {
         return $this->provider->requestGet('/users/@me');
     }

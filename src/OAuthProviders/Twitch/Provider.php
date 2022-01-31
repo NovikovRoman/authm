@@ -27,7 +27,7 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
     }
 
     /**
-     * @param $path
+     * @param string $path
      * @param array $query
      * @param array $headers
      * @return array
@@ -104,7 +104,7 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
         ];
     }
 
-    private function requestError(RequestException $e)
+    private function requestError(RequestException $e): APIException
     {
         $resp = json_decode($e->getResponse()->getBody()->getContents(), true);
         if (!$resp) {

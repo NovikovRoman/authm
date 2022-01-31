@@ -56,8 +56,8 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
 
     /**
      * todo: not used
-     * @param $path
-     * @param $params
+     * @param string $path
+     * @param array $params
      * @param array $headers
      * @return array
      * @throws APIException
@@ -91,7 +91,7 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
      * @param RequestException $e
      * @return APIException
      */
-    private function requestError(RequestException $e)
+    private function requestError(RequestException $e): APIException
     {
         $resp = json_decode($e->getResponse()->getBody()->getContents(), true);
         if (!$resp) {

@@ -20,7 +20,7 @@ class Videos
      * @throws APIException
      * @throws GuzzleException
      */
-    public function getID(array $ids = [])
+    public function getID(array $ids = []): array
     {
         $path = '/videos';
         if (!empty($ids)) {
@@ -30,26 +30,26 @@ class Videos
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param array $filter
      * @return array
      * @throws APIException
      * @throws GuzzleException
      */
-    public function getUserID($id, $filter = [])
+    public function getUserID(string $id, array $filter = []): array
     {
         $path = '/videos?user_id=' . $id;
         return $this->provider->requestGet($path, $filter); // Client
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param array $filter
      * @return array
      * @throws APIException
      * @throws GuzzleException
      */
-    public function getGameID($id, $filter = [])
+    public function getGameID(string $id, array $filter = []): array
     {
         $path = '/videos?game_id=' . $id;
         return $this->provider->requestGet($path, $filter); // Client

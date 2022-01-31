@@ -15,15 +15,15 @@ class Users
     }
 
     /**
-     * @param $after
-     * @param $first
-     * @param $fromID
-     * @param $toID
+     * @param string $after
+     * @param int $first
+     * @param string $fromID
+     * @param string $toID
      * @return array
      * @throws APIException
      * @throws GuzzleException
      */
-    public function follows($after, $first, $fromID, $toID)
+    public function follows(string $after, int $first, string $fromID, string $toID): array
     {
         $query = [];
         if ($after) {
@@ -47,7 +47,7 @@ class Users
      * @throws APIException
      * @throws GuzzleException
      */
-    public function getID(array $ids = [])
+    public function getID(array $ids = []): array
     {
         $path = '/users';
         if (!empty($ids)) {
@@ -62,7 +62,7 @@ class Users
      * @throws APIException
      * @throws GuzzleException
      */
-    public function getLogin(array $logins = [])
+    public function getLogin(array $logins = []): array
     {
         $path = '/users';
         if (!empty($logins)) {

@@ -21,7 +21,7 @@ class People
      * @throws APIException
      * @throws GuzzleException
      */
-    public function me(array $personFields = ['emailAddresses'])
+    public function me(array $personFields = ['emailAddresses']): array
     {
         $path = str_replace('{service}', self::SERVICE,
             Provider::API_BASE_PATH . '/v1/people/me');
