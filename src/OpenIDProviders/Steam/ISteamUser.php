@@ -23,7 +23,7 @@ class ISteamUser extends Category implements CategoryInterface
      * @return array
      * @throws GuzzleException
      */
-    public function getPlayerSummaries($id)
+    public function getPlayerSummaries($id): array
     {
         $url = $this->buildUrl(self::categoryName(), '/GetPlayerSummaries/v0002/?key={key}&steamids=' . $id);
         $data = $this->get($url);

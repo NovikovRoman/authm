@@ -5,7 +5,7 @@ namespace AuthManager\OAuthProviders\Discord;
 use AuthManager\Exceptions\APIException;
 use AuthManager\OAuthProviderInterface;
 use AuthManager\OAuthProviders\AbstractProvider;
-use AuthManager\Parameters;
+use AuthManager\Constants;
 use AuthManager\ProviderWithAPIInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
@@ -38,8 +38,8 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
     {
         $url = self::API_BASE_PATH . $path . (empty($query) ? '' : '?' . http_build_query($query));
         try {
-            $content = $this->httpClient->request(Parameters::METHOD_GET, $url, [
-                'connect_timeout' => Parameters::CONNECT_TIMEOUT,
+            $content = $this->httpClient->request(Constants::METHOD_GET, $url, [
+                'connect_timeout' => Constants::CONNECT_TIMEOUT,
                 'headers' => array_merge($headers, $this->getAuthHeaders()),
             ])->getBody()->getContents();
 
@@ -65,14 +65,14 @@ class Provider extends AbstractProvider implements OAuthProviderInterface, Provi
     public function requestPost(string $path, array $params, array $headers = []): array
     {
         $options = [
-            'connect_timeout' => Parameters::CONNECT_TIMEOUT,
+            'connect_timeout' => Constants::CONNECT_TIMEOUT,
             'verify' => false,
             'headers' => array_merge($headers, $this->getAuthHeaders()),
             'body' => http_build_query($params),
         ];
         try {
             $content = $this->httpClient
-                ->request(Parameters::METHOD_POST, self::API_BASE_PATH . $path, $options)
+                ->request(Constants::METHOD_POST, self::API_BASE_PATH . $path, $options)
                 ->getBody()->getContents();
 
             if ($resp = json_decode($content, true)) {

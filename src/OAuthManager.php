@@ -9,18 +9,22 @@ use GuzzleHttp\Psr7\Request;
 
 class OAuthManager implements OAuthManagerInterface
 {
-    /** @var OAuthProviderInterface */
-    private $provider;
-    /** @var Client */
-    private $httpClient;
+    private OAuthProviderInterface $provider;
+    private Client $httpClient;
 
     public function __construct(OAuthProviderInterface $provider)
     {
         $this->provider = $provider;
-        $this->httpClient = new Client(['timeout' => Parameters::TIMEOUT]);
+        $this->httpClient = new Client(['timeout' => Constants::TIMEOUT]);
     }
 
-    public function signin($state, $redirect = false, array $params = []): string
+    /**
+     * @param string $state
+     * @param bool $redirect
+     * @param array $params
+     * @return string
+     */
+    public function signin(string $state, bool $redirect = false, array $params = []): string
     {
         $query = [
             'response_type' => 'code',

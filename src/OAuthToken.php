@@ -5,15 +5,15 @@ namespace AuthManager;
 class OAuthToken implements OAuthTokenInterface
 {
 
-    private $accessToken;
-    private $tokenType;
-    private $expiresIn;
-    private $refreshToken;
-    private $scope;
+    private string $accessToken;
+    private string $tokenType;
+    private string $expiresIn;
+    private string $refreshToken;
+    private array $scope;
 
-    private $error;
-    private $errorDescription;
-    private $errorUri;
+    private string $error;
+    private string $errorDescription;
+    private string $errorUri;
 
     public function __construct(array $token)
     {
@@ -21,10 +21,8 @@ class OAuthToken implements OAuthTokenInterface
         $this->tokenType = empty($token['token_type']) ? '' : $token['token_type'];
         $this->expiresIn = empty($token['expires_in']) ? '' : $token['expires_in'];
         $this->refreshToken = empty($token['refresh_token']) ? '' : $token['refresh_token'];
-        $this->scope = empty($token['scope']) ? '' : $token['scope'];
-        if (!is_array($this->scope)) {
-            $this->scope = explode(' ', $this->scope);
-        }
+        $scope = empty($token['scope']) ? '' : $token['scope'];
+        $this->scope = is_array($scope) ? $scope : explode(' ', $scope);
 
         $this->error = empty($token['error']) ? '' : $token['error'];
         $this->errorDescription = empty($token['error_description']) ? '' : $token['error_description'];

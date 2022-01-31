@@ -9,32 +9,31 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class OpenIDManager implements OpenIDManagerInterface
 {
-    private $url;
-    private $returnTo;
-    /** @var Client */
-    private $httpClient;
-    private $invalidateHandle;
+    private string $url;
+    private string $returnTo;
+    private Client $httpClient;
+    private string $invalidateHandle = '';
 
     public function __construct(OpenIDInterface $provider, string $returnTo)
     {
         $this->url = $provider->getAuthURI();
         $this->returnTo = $returnTo;
-        $this->httpClient = new Client(['timeout' => Parameters::TIMEOUT]);
+        $this->httpClient = new Client(['timeout' => Constants::TIMEOUT]);
     }
 
     public function signin($redirect = false): string
     {
         $pUrl = parse_url($this->returnTo);
         $params = [
-            'openid.ns' => 'http://specs.openid.net/auth/2.0',
+            'openid.ns' => 'https://specs.openid.net/auth/2.0',
             'openid.mode' => 'checkid_setup',
             'openid.return_to' => $this->returnTo,
             'openid.realm' => $pUrl['scheme'] . '://' . $pUrl['host'],
-            'openid.ns.sreg' => 'http://openid.net/extensions/sreg/1.1',
-            'openid.identity' => 'http://specs.openid.net/auth/2.0/identifier_select',
-            'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
+            'openid.ns.sreg' => 'https://openid.net/extensions/sreg/1.1',
+            'openid.identity' => 'https://specs.openid.net/auth/2.0/identifier_select',
+            'openid.claimed_id' => 'https://specs.openid.net/auth/2.0/identifier_select',
         ];
-        $url = $this->url . '?' . http_build_query($params, '', '&');
+        $url = $this->url . '?' . http_build_query($params); // '', '&'
         if ($redirect) {
             header('Location: ' . $url);
             return '';
@@ -44,7 +43,7 @@ class OpenIDManager implements OpenIDManagerInterface
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @return string
      * @throws GuzzleException
      */
@@ -117,18 +116,17 @@ class OpenIDManager implements OpenIDManagerInterface
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @return mixed
      * @throws GuzzleException
      * @throws Exception
      */
-    private function discover($url)
+    private function discover(string $url)
     {
         $response = $this->httpClient->request('GET', $url);
         $contentType = $response->getHeader('Content-Type');
         if (empty($contentType) || !preg_match('#application/xrds\+xml#', $contentType[0])) {
-            $e = new BadResponseException('Unexpected Content-Type', null, $response);
-            throw $e;
+            throw new BadResponseException('Unexpected Content-Type', null, $response);
         }
 
         $body = $response->getBody()->getContents();

@@ -7,7 +7,7 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class Userinfo
 {
-    private $provider;
+    private AbstractProvider $provider;
 
     public function __construct(AbstractProvider $provider)
     {

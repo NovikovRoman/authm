@@ -2,7 +2,7 @@
 
 namespace AuthManager;
 
-class Parameters
+class Constants
 {
     const METHOD_POST = 'POST';
     const METHOD_GET = 'GET';

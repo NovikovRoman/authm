@@ -7,5 +7,5 @@ use AuthManager\ProviderWithAPIInterface;
 
 class Provider extends AbstractProvider implements OAuthProviderInterface, ProviderWithAPIInterface
 {
-    protected $region = 'eu';
+    protected string $region = 'eu';
 }

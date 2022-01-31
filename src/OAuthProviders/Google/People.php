@@ -8,7 +8,7 @@ use GuzzleHttp\Exception\GuzzleException;
 class People
 {
     const SERVICE = 'people';
-    private $provider;
+    private Provider $provider;
 
     public function __construct(Provider $provider)
     {

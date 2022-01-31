@@ -4,7 +4,7 @@ namespace AuthManager\OAuthProviders\BattleNet;
 
 use AuthManager\Exceptions\APIException;
 use AuthManager\OAuthProviders\AbstractProvider as OAuthProvidersAbstractProvider;
-use AuthManager\Parameters;
+use AuthManager\Constants;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 
@@ -18,7 +18,7 @@ abstract class AbstractProvider extends OAuthProvidersAbstractProvider
     const API_BASE_PATH = 'https://{region}.battle.net';
     const CN_API_BASE_PATH = 'https://www.battlenet.com.cn';
 
-    protected $region = 'eu';
+    protected string $region = 'eu';
 
     protected function authorizeURL(string $region): string
     {
@@ -70,9 +70,9 @@ abstract class AbstractProvider extends OAuthProvidersAbstractProvider
         }
 
         try {
-            $content = $this->httpClient->request(Parameters::METHOD_GET, $url, [
+            $content = $this->httpClient->request(Constants::METHOD_GET, $url, [
                 'headers' => $headers,
-                'connect_timeout' => Parameters::CONNECT_TIMEOUT,
+                'connect_timeout' => Constants::CONNECT_TIMEOUT,
             ])->getBody()->getContents();
 
             if ($resp = json_decode($content, true)) {
@@ -98,14 +98,14 @@ abstract class AbstractProvider extends OAuthProvidersAbstractProvider
     {
         $options = [
             'verify' => false,
-            'connect_timeout' => Parameters::CONNECT_TIMEOUT,
+            'connect_timeout' => Constants::CONNECT_TIMEOUT,
             'headers' => array_merge($headers, $this->getClientHeaders(), $this->getAuthHeaders()),
             'body' => http_build_query($params),
         ];
 
         try {
             $content = $this->httpClient->request(
-                Parameters::METHOD_POST, self::API_BASE_PATH . $path, $options)
+                Constants::METHOD_POST, self::API_BASE_PATH . $path, $options)
                 ->getBody()->getContents();
 
             if ($resp = json_decode($content, true)) {

@@ -2,21 +2,20 @@
 
 namespace AuthManager\OpenIDProviders\Steam;
 
-use AuthManager\Parameters;
+use AuthManager\Constants;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
 abstract class Category
 {
     const baseUrl = 'https://api.steampowered.com';
-    protected $apiKey;
-    /** @var Client */
-    protected $httpClient;
+    protected string $apiKey;
+    protected Client $httpClient;
 
-    public function __construct($apiKey)
+    public function __construct(string $apiKey)
     {
         $this->apiKey = $apiKey;
-        $this->httpClient = new Client(['timeout' => Parameters::TIMEOUT]);
+        $this->httpClient = new Client(['timeout' => Constants::TIMEOUT]);
     }
 
     protected function buildUrl($category, $url)
@@ -30,10 +29,10 @@ abstract class Category
      * @return array
      * @throws GuzzleException
      */
-    protected function get($url)
+    protected function get($url): array
     {
-        $response = $this->httpClient->request(Parameters::METHOD_GET, $url, [
-            'connect_timeout' => Parameters::CONNECT_TIMEOUT,
+        $response = $this->httpClient->request(Constants::METHOD_GET, $url, [
+            'connect_timeout' => Constants::CONNECT_TIMEOUT,
         ]);
         $data = json_decode($response->getBody()->getContents(), true);
         return empty($data['response']) ? [] : $data['response'];

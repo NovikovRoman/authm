@@ -6,10 +6,10 @@ use Exception;
 
 class APIException extends Exception
 {
-    private $status;
-    private $statusMessage;
+    private string $status = '';
+    private string $statusMessage = '';
 
-    public function __construct($message, $code = -1)
+    public function __construct(string $message, int $code = -1)
     {
         parent::__construct($message, $code);
         $this->message = $message;

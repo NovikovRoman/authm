@@ -23,7 +23,7 @@ class IPlayerService extends Category implements CategoryInterface
      * @return int
      * @throws GuzzleException
      */
-    public function getSteamLevel($id)
+    public function getSteamLevel($id): int
     {
         $url = '/GetSteamLevel/v1/?key={key}&input_json={"steamid":' . $id . '}';
         $url = $this->buildUrl(self::categoryName(), $url);
@@ -36,7 +36,7 @@ class IPlayerService extends Category implements CategoryInterface
      * @return array
      * @throws GuzzleException
      */
-    public function getOwnedGames($id)
+    public function getOwnedGames($id): array
     {
         $url = $this->buildUrl(
             self::categoryName(),
